@@ -2,14 +2,17 @@ import axios from "axios";
 import config from "@/config";
 // import { options } from "less";
 
+//判断是否为生产模式或者开发模式
 const baseUrl =
   process.env.NODE_ENV === "development" ? config.baseUrl.dev : config.baseUrl.pro;
 
 class HttpRequeset {
+  // 设置默认值为空方便使用 devServer 代理
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
   }
   getInsideConfig() {
+    // 默认配置
     const config = {
       baseUrl: this.baseUrl,
       header: {},
@@ -43,10 +46,14 @@ class HttpRequeset {
       }
     );
   }
+  //创建axios实例
   request(options){
     const instance = axios.create()
+    // 默认配置和用户自定义配置合并
     options ={...this.getInsideConfig(), ...options}
+    // 调用拦截器
     this.interceptors(instance)
+    // 返回实例
     return instance(options)
 }
 }
